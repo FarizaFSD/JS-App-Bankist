@@ -117,6 +117,57 @@ const nav = document.querySelector(".nav");
 nav.addEventListener("mouseover", handleHover.bind(0.5));
 nav.addEventListener("mouseout", handleHover.bind(1));
 
+/// sticky navigation
+// const initialCoords = section1.getBoundingClientRect();
+// window.addEventListener("scroll", function () {
+//   if (window.scrollY > initialCoords.top) nav.classList.add("sticky");
+//   else nav.classList.remove("sticky");
+// });
+
+//////////////////// Intersection OBSERVER//////////////////////////////
+// const obsCallBack = function (entries, observer) {
+//   entries.forEach((entry) => {
+//     console.log(entry);
+//   });
+// };
+// const obsOptions = {
+//   root: null,
+//   threshold: [0, 0.2],
+// };
+// const observer = new IntersectionObserver(obsCallBack, obsOptions);
+// observer.observe(section1);
+const header = document.querySelector(".header");
+const navHeight = nav.getBoundingClientRect().height;
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) nav.classList.add("sticky");
+  else nav.classList.remove("sticky");
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
+
+//Reveal Sections
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove("section--hidden");
+  observer.unobserve(entry.target);
+};
+const allSec = document.querySelectorAll(".section");
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  treshold: 0.15,
+});
+allSec.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
 /////777777//////////////////////////////
 //////////////////////////////////////7//
 /////////////////////////////////////////
@@ -125,7 +176,7 @@ nav.addEventListener("mouseout", handleHover.bind(1));
 //console.log(document.head);
 //console.log(document.body);
 
-const header = document.querySelector(".header");
+//const header = document.querySelector(".header");
 const allSections = document.querySelectorAll("section");
 //console.log(allSections);
 
